@@ -42,8 +42,6 @@ int main(void)
 {
 	status_t error = SUCCESS;
 
-	fprintf(stderr, "%lld\n", LLONG_MAX);
-
 	llvector_t *row = llvector_initialize();
 	if (row == NULL)
 	{
