@@ -96,7 +96,7 @@ exit0:
  * @param b - the format specifier for the right column
  * @return - format string for the types for the two given parameters
  */
-#define LL_TABLE_ROW(a, b) ("%-19"a" %"b"\n")
+#define LL_TABLE_ROW(a, b) ("%19"a" %19"b"\n")
 
 void simulate_diff_engine(llvector_t *row, long long rows)
 {
