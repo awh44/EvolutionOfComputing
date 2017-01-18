@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
 #include "llvector.h"
 #include "status.h"
@@ -111,7 +110,7 @@ void simulate_diff_engine(llvector_t *row, long long rows)
 		llvector_set(row, 0, llvector_get(row, 0) + 1);
 
 		/*
-			TODO: technically, calculating more values than are necessary - once the end of the
+			Minor XXX: technically, calculating more values than are necessary - once the end of the
 			table is being reached, columns start to stop being needed from the right.
 		*/
 		//Start at 1 because first column is the 'x' value
