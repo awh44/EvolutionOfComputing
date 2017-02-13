@@ -1,0 +1,6 @@
+#number of states, initial state, accepting state, rejecting state
+4 0 2 3
+#state, reading, goto state, write, movement
+0 a 1 b R
+1 b 0 c L
+0 b 2 _ R
