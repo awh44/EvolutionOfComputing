@@ -1,5 +1,5 @@
 #number of states, initial state, accepting state, rejecting state
-10 0 8 9
+11 0 9 10
 #state, reading, goto state, write, movement
 0 1 1 O R
 0 0 2 O R
@@ -20,8 +20,11 @@
 5 0 5 0 R
 5 1 1 0 R
 5 I 8 I R
+6 1 6 1 R
 6 I 6 I R
 6   7 I L
+7 1 7 1 L
 7 I 7 I L
 7 0 8 0 R
-7 1 6 0 R
+8 1 6 0 R
+8 I 9 I R
