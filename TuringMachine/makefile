@@ -5,7 +5,7 @@ INC=inc
 IN=input
 OUT=output
 
-COMMON_FLAGS=-I$(INC) -Wall -g -o $@ $(DEBUG) $(MORE)
+COMMON_FLAGS=-I$(INC) -std=gnu11 -Wall -o $@ $(DEBUG) $(MORE)
 OBJ_FLAGS=$(COMMON_FLAGS) -c $^
 PROG_FLAGS=$(COMMON_FLAGS) $^
 
