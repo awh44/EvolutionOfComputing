@@ -1,0 +1,100 @@
+Austin Herring
+CS T680: Evolution of Computing
+Analog Computer Projectile Simulation
+February 5, 2017
+
+The provided file projectile represents the configuration of an analog comupter
+to simulate firing a projectile through the air, including air resistance. The
+following describes the entire secnario and the process of arriving at the
+final simulation. To simply learn how to modify and use the simulation, see
+beginning at line 67.
+
+To describe the model in more detail, the simulator implements a representation
+of the scenario described in Figure 1 in the provided figures.pdf.
+
+The black circle is the projectile, F_g is the force due to gravity, pulling straight
+down, and F_a is the force due to air resistance, in the direct opposite direction of
+the projectile. The initial velocity is represented as v_0, fired at an angle theta from
+the ground from position (0, 0).
+
+Given this, the net force on the projectile is as follows:
+	F_net = F_g + F_a
+Breaking this down into the x and y components yields:
+	F_netx = F_ax
+	F_nety = F_ay + F_g
+Next, the assumption is made that the force due to air resistance is directly
+proportional, for some constant k, to the projectile's velocity. Using this, the
+fact that F_g = mg, and, in general, the fact that force is proportional to the
+mass and accelaration, i.e., F = ma, yields:
+	m * a_x = k * v_x
+	m * a_y = k * v_y + m * g
+Rewriting the acceleration and velocity in terms of derivatives yields:
+	m * d^2x/dt^2 = k * dx/dt
+	m * d^2y/dt^2 = k * dy/dt + m * g
+Finally, simplifying so that only the second derivative is on the left-hand side
+yields:
+	d^2x/dt^2 = k/m * dx/dt
+	d^2y/dt^2 = k/m * dy/dt + g
+
+Next, these equations are translated into two analog computer circuits, using
+two integrators and one potentiometer apiece. These are provided as Figure 2 in
+the file figures.pdf, with the upper diagram being for the x direction and the
+lower diagram for y. Note that v_0x and v_0y are the initial velocities in the
+x and y directions, respectively, and are obtained in the following way:
+	v_0x = v_0 * cos(v_0)
+	v_0y = v_0 * sin(v_0)
+
+Finally, these circuits are translated into input to be used in the anasim
+simulator. This translation is provided in the file projectile. The unit numbers
+correspond to the number labels in Figure 2 in figures.pdf.
+ 
+In the file, lines 4 through 7 are for the x direction. Line 4 is the integrator for
+acceleration, with its initial condition for velocity in the x direction in
+meters per second and -k/m * dx/dt and yielding the negation of the velocity
+in meters per second; line 5 is the potentiometer that multiples -dx/dt by k/m;
+and line 6 is the integrator for velocity, with an initial acceleration of 0 and
+yielding the x position in meters.
+
+Lines 3 and 7 through 9 are for the y direction. Line 3 is the acceleration due
+to gravity, which is assumed to be -9.8 meters per second, for the gravity on
+Earth. Line 4 is the integrator for acceleration, with its initial condition for
+velocity in the y direction in meters per second, taking as input the constant
+from unit 0 as the gravity and -k/m * dy/dt, and yielding the negation of the
+velocity in meters per second; line 5 is the potentiometer that multiplies
+-dy/dt by k/m; and line 6 is the integrator for velocity, with an initial
+acceleration of 0 and yielding the y position in meters.
+
+Currently, the simulation is set to sample the values at 0.1 second intervals
+for 40 intervals.
+
+This means the simulation can be modified in four (theoretically, five) ways:
+	-Changing the initial condition on line 4 to change the initial x velocity
+	-Changing the initial condition on line 7 to change the initial y velocity
+	-Changing the values on both line 5 and 8 to change the ratio k/m. Note that
+	 to represent a "real" analog computer, this value must be less than 1.
+	-Changing the time step and number of steps to update the sampling rate
+	-Changing the value of the constant for unit 0 to represent gravity in a
+	 different environment.
+
+It also means that the output columns are as follows:
+	1: time step
+	2: x velocity
+	3: x position
+	4: y velocity
+	y: y position
+
+Running the simulator reveals a "lopsided" parabola, as theorized in Figure 1 and
+demonstrated in Figure 3. As
+the constant k is increased or m is decreased, thus increasing the value k/m,
+the right-hand side of the parabola becomes much shorter, as the effect of the
+air resistance is increased. Decreasing the initial velocities has the effect of
+decreasing the absolute distances traveled in those particular directions, but
+the overall shape of the "lopsided parabola" is the same. On the converse,
+decreasing the values k/m makes the parabola more symmetrical, and increasing
+the initial velocities increases the absolute distances traveled in thoes
+particular directions, though the overall shape is mostly the same. Both of
+these results appear to be reasonable, as k/m represents the resistance of the
+air, so as it increases, the projectile will not be able to go as far, but as v
+increases, though the force due to air resistance will also increase, the object
+will also be able to go further, as, though it will decrease more quickly, it is
+a higher value to begin with.
