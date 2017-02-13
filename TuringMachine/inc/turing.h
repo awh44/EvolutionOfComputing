@@ -26,6 +26,7 @@ status_t turing_run(turing_t *turing);
 status_t turing_make_transition(turing_t *turing, state_t state, char reading);
 unsigned short turing_has_accepted(turing_t *turing);
 unsigned short turing_has_rejected(turing_t *turing);
+void turing_dump_state(turing_t *turing, FILE *stream);
 void turing_print_results(turing_t *turing, FILE *stream);
 
 #endif // __TURING_H__

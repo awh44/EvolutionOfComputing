@@ -95,7 +95,8 @@ int main(int argc, char **argv)
 
 	if ((error = turing_run(tm)))
 	{
-		fprintf(stderr, "Error: Problem while running Turing machine\n");
+		fprintf(stderr, "Error: Problem while running Turing machine. Machine state:\n");
+		turing_dump_state(tm, stderr);
 		goto exit3;
 	}
 

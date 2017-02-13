@@ -66,7 +66,7 @@ status_t turing_run(turing_t *turing)
 	{
 		//If the head position is past the end of the tape, push a blank symbol
 		//onto it
-		if (turing->tape_pos + 1 == string_length(turing->tape))
+		if (turing->tape_pos == string_length(turing->tape))
 		{
 			string_push_back(turing->tape, ' ');
 		}
@@ -122,6 +122,16 @@ unsigned short turing_has_accepted(turing_t *turing)
 unsigned short turing_has_rejected(turing_t *turing)
 {
 	return turing->state == turing->reject;
+}
+
+void turing_dump_state(turing_t *turing, FILE *stream)
+{
+	fprintf
+	(
+		stream,
+		"State: %zu\nTape: %s\nHead position: %zu\n",
+		turing->state, string_c_str(turing->tape), turing->tape_pos
+	);
 }
 
 void turing_print_results(turing_t *turing, FILE *stream)
