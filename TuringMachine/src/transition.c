@@ -30,6 +30,7 @@ status_t transfunc_init(transfunc_t **func, state_t num)
 	}
 
 	memset((*func)->func, 0, num * sizeof(*(*func)->func));
+	(*func)->states = num;
 
 	goto success;
 
@@ -41,9 +42,9 @@ success:
 	return error;
 }
 
-void transfunc_uninit(transfunc_t *func, state_t num)
+void transfunc_uninit(transfunc_t *func)
 {
-	for (size_t i = 0; i < num; i++)
+	for (size_t i = 0; i < func->states; i++)
 	{
 		out_t *out = func->func[i];
 		while (out != NULL)
@@ -61,6 +62,12 @@ void transfunc_uninit(transfunc_t *func, state_t num)
 status_t transfunc_add_trans(transfunc_t *func, state_t state, char reading, trans_t *trans)
 {
 	status_t error = SUCCESS;
+
+	if ((state >= func->states) || (trans->state >= func->states))
+	{
+		error = INVALID_TRANS;
+		goto exit0;
+	}
 
 	out_t *out = malloc(sizeof(*out));
 	if (out == NULL)

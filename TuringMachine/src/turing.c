@@ -48,7 +48,7 @@ success:
 
 void turing_uninit(turing_t *turing)
 {
-	transfunc_uninit(turing->func, turing->num_states);
+	transfunc_uninit(turing->func);
 	string_uninitialize(turing->tape);
 	free(turing);
 }
@@ -93,12 +93,10 @@ status_t turing_make_transition(turing_t *turing, state_t state, char reading)
 		goto exit0;
 	}
 
+	//Update the TM
 	turing->state = trans->state;
 
-	if (trans->write != '_')
-	{
-		string_set(turing->tape, turing->tape_pos, trans->write);
-	}
+	string_set(turing->tape, turing->tape_pos, trans->write);
 
 	//If at the left end, the TM can't continue going left
 	if ((trans->dir == LEFT) && (turing->tape_pos > 0))

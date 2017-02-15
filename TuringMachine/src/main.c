@@ -12,9 +12,9 @@ static status_t parse_transition(transfunc_t *func, char *line);
 int main(int argc, char **argv)
 {
 	status_t error = SUCCESS;
-	if (argc != 3)
+	if (argc != 2)
 	{
-		fprintf(stderr, "Usage: [machine configuration] [input tape]\n");
+		fprintf(stderr, "Usage: %s [machine configuration]\n", argv[0]);
 		error = ARGS_ERROR;
 		goto exit0;
 	}
@@ -27,15 +27,6 @@ int main(int argc, char **argv)
 		goto exit0;
 	}
 
-	FILE *tape;
-	if ((tape = fopen(argv[2], "r")) == NULL)
-	{
-		fprintf(stderr, "Error: Could not open %s\n", argv[2]);
-		error = OPEN_ERROR;
-		goto exit1;
-	}
-
-	
 	char *line = NULL;
 	size_t len;
 	ssize_t chars_read;
@@ -49,7 +40,7 @@ int main(int argc, char **argv)
 	{
 		fprintf(stderr, "Error: Could not read Turing machine attributes\n");
 		error = FILE_FORMAT_ERROR;
-		goto exit2;
+		goto exit1;
 	}
 
 	//Eliminate '\n'
@@ -58,15 +49,14 @@ int main(int argc, char **argv)
 	if ((error = parse_turing_attributes(&num, &start, &accept, &reject, line)))
 	{
 		fprintf(stderr, "Error: Could not parse Turing machine attributes %s\n", line);
-		goto exit2;
+		goto exit1;
 	}
 
 	turing_t *tm;
 	if ((error = turing_init(&tm, num, start, accept, reject)))
 	{
-		goto exit2;
+		goto exit1;
 	}
-
 
 	while ((chars_read = getline(&line, &len, machine)) > 0)
 	{
@@ -77,17 +67,17 @@ int main(int argc, char **argv)
 			if ((error = parse_transition(tm->func, line)))
 			{
 				fprintf(stderr, "Error: Could not parse transition: %s\n", line);
-				goto exit3;
+				goto exit2;
 			}
 		}
 	}
 
 	//< 2 in this case because the tape must be at least one character long
-	if ((chars_read = getline(&line, &len, tape)) < 2)
+	if ((chars_read = getline(&line, &len, stdin)) < 2)
 	{
 		fprintf(stderr, "Error: Could not read tape input\n");
 		error = FILE_FORMAT_ERROR;
-		goto exit3;
+		goto exit2;
 	}
 
 	//- 1 for the '\n'
@@ -97,17 +87,15 @@ int main(int argc, char **argv)
 	{
 		fprintf(stderr, "Error: Problem while running Turing machine. Machine state:\n");
 		turing_dump_state(tm, stderr);
-		goto exit3;
+		goto exit2;
 	}
 
 	turing_print_results(tm, stdout);
 
-exit3:
-	turing_uninit(tm);
 exit2:
-	free(line);
-	fclose(tape);
+	turing_uninit(tm);
 exit1:
+	free(line);
 	fclose(machine);
 exit0:
 	return error;
