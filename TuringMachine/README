@@ -77,9 +77,9 @@ omitting 1s on that side of the separating 0. The basic idea for the machine is 
 replace each 1 in the numbers with a 0 until one of them has been exhausted and then to simply
 "copy" the remaining 1s from the other number to the end of the tape.
 
-For more detail, a full state diagram is given for the Turing machine in the provided max_tm.pdf.
-Note that the use of "O" is a way of marking the left end of the tape. A full algorithmic
-description of this diagram is as follows:
+For more detail, a full state diagram is given for the Turing machine in the provided
+doc/max_tm.pdf. Note that the use of "O" is a way of marking the left end of the tape. A full
+algorithmic description of this diagram is as follows:
 	0. If the read symbol is a 1, mark it, move to the right, and go to stage 1.
 	   If the read symbol is a 0, mark it, and go to stage 9.
 	1. Move right until a symbol besides 1 is encountered, and then do one of the following:
