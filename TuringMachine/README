@@ -1,0 +1,122 @@
+Austin Herring
+CS T680: Evolution of Computing
+Turing Machine
+February 14, 2017
+
+The provided files comprise a program to simulate a Turing machine. The model used to
+implement this Turing machine is based on the one presented in Michael Sipser's Introduction
+to the Theory of Computation. Some elements of that presentation have been eliminated to yield
+the following model of a Turing machine:
+	A set of states
+	An alphabet of symbols
+	A transition relation
+	A start state
+	An accept state
+	A reject state	
+Given a specification of a Turing machine fulfilling this model and an input tape on which to
+work, the program will run on the input tape, rewriting it per the specification, until it hits
+the accept or reject state, at which point it will stop and print both the final tape and whether
+the machine accepted or rejected.
+
+To compile the program, on a Unix machine, simply executing "make" should compile the program
+into "turing" in the current directory. (Note that the makefile does expect gcc and the "gnu11"
+standard, though this shouldn't be terribly hard to change.)
+
+The program is run with a single argument, the name of a file containing a
+specification of a Turing machine. The first line of the specification should take the
+following form:
+	[number of states] [start state] [accept state] [reject state]
+Each of these should be numbers separated by spaces, with a '\n' immediately following the
+[reject state]. The first element on the line is the total number of states in the Turing
+machine, the second is the number for the state at which the Turing machine should start,
+the third is the number for the state at which the Turing machine has accepted, and the
+fourth is the number for the state at which the Turing machine has rejected.
+
+The remaining lines of the specification are elements of the transition relation for the
+Turing machine, for each combination of state and input symbol being read, telling it to
+which state to go, what to write, and which direction to move the read head along the tape.
+They take the following form:
+	[current state] [currently reading] [state to go to] [symbol to write] [direciton to move]
+The first element is the current state of the TM, and it must be in the range
+[0, number of states), as specified on the first line, and the second is the value the head
+is currently reading. This can be any ASCII character; use of a space for this symbol
+represents a "blank" symbol on the tape, i.e., one that has not been written yet. Similarly,
+the third element is the state to which the machine should transition, and must be in the range
+[0, number of states), and the fourth element is the symbol with which to replace the
+currently read symbol. Note that if the state to go to is an accept or reject state, the
+machine will finish its execution. (This also means that transitions specified for accept and
+reject states will never be used.) Also note that the character to write can be any ASCII
+character again, and again, a space represents the "blank" symbol. Finally, the direction to
+move is the direction to move the read head along the input tape.
+
+There are a few final notes that should be made about the specification and execution. First,
+for the transitions, while parsing the input file, if an invalid transition is read, i.e., the
+current state or the state to go to are not in the appropriate range, the program will
+error out. Second, if no transition is provided for a particular state and read symbol
+combination and the Turing machine encounters this combination while running, it will
+error out. (Note that it does not go to a reject state but simply errors.) Third, there
+is no explicit modeling of the input or tape alphabets; if a character outside of the
+desired alphabets is encountered, this will be treated as an error as just described,
+because there will be no transition for that combination. Finally, note that if a transition
+specifies a move of the head left but the head is already at the left end of the tape, the head
+will not move, i.e., the tape is only infinitely long in one direction. Also, note that blank
+lines are ignored and comments can be made by beginning a line with '#'.
+
+Finally, the second argument to the program is the name of the file containing the input tape.
+This should be a single line of ASCII characters.
+
+Also provided with this program are two example specifications, in the input/ directory. The
+first is lenpow2.txt. This is a translation of Figure 3.8 of Michael Sipser's textbook into a
+specification, implementing a Turing machine that takes as input a series of 0s and accepts only
+if the length of the string is a power of two.
+
+The second is max.txt. This takes as input two numbers in unary notation using 1s, separated by
+a 0, and computes the maximum of the two, writing it in unary notation as a series of Is at the
+end of the input tape. Using the value zero for either of the inputs can be done by simply
+omitting 1s on that side of the separating 0. The basic idea for the machine is to pairwise
+replace each 1 in the numbers with a 0 until one of them has been exhausted and then to simply
+"copy" the remaining 1s from the other number to the end of the tape.
+
+For more detail, a full state diagram is given for the Turing machine in the provided max_tm.pdf.
+Note that the use of "O" is a way of marking the left end of the tape. A full algorithmic
+description of this diagram is as follows:
+	0. If the read symbol is a 1, mark it, move to the right, and go to stage 1.
+	   If the read symbol is a 0, mark it, and go to stage 9.
+	1. Move right until a symbol besides 1 is encountered, and then do one of the following:
+	   If the symbol is a 0, move right and go to stage 2.
+	   If the symbol is an I, move right and go to stage 6.
+	2. Move right until a symbol besides 0 is encountered, and then do one of the following:
+	   If the symbol is a blank, write an I, move left, and go to stage 4.
+	   If the symbol is a 1, write a 0, move right, and go to stage 3
+	   If the symbol is an I, move right, and go to stage 3.
+	3. Move right until a blank is found, write an I, and move left.
+	4. Move to the left end of the input tape.
+	5. Move right until a symbol besides 0 is encountered, and then do one of the following:
+	   If the symbol is a 1, write a 0, move right, and go to stage 1.
+	   If the symbol is an I, accept.
+	6. Move right until a blank is found, write an I, move left, and go to stage 7.
+	7. Move left until a 0 is found, and then move right.
+	8. If a 1 is found, write a 0, move right, and go to stage 6.
+	   If an I is found, accept.
+    9. If a 1 is found, write a 0, and go to stage 6.
+	   If a blank is found, accept.
+
+Note how this operates. Stages 0 through 5 are used to implement the "pairwise" elimination.
+Stage 0, for the very leftmost 1, or stage 5, for all others, turns the leftmost 1 of the left
+number 0, stage 1 skips through the rest of its 0s, stage 2 finds the first 1 in the right
+number and makes it a 0, stage 3 searches for the right end of the input tape and writes an I,
+and stage 4 moves the tape all the way back to the left end to search anew. Note that stage
+2 also handles the case where the right number has been exhausted; if it finds an I, then the
+right number is all 0s, so it goes to stage 3, and if it finds a blank, that means the right
+number has no digits, so it skips right to writing an I going to the left end of the tape.
+
+Stages 6 through 8 handle the case where the left number has been exhausted. Stage 6 searches
+for the first blank and writes an I, and stage 7 moves back to the beginning of the number
+by searching for the first 0. In stage 8, the symbol to the right must either be a 1, in which
+case the machine goes back to stage 6 to search for the right end of the tape, or an I, in which
+case the the right number has no more 1s, so the machine accepts.
+
+Stage 9 exists for the sole purpose of handling an empty left number. In this case, if the symbol
+to the right is a blank, then both numbers are empty, so the machine can immediately accept. If
+the symbol is a 1, then this is identical to an "exhausted" left number, so the machine goes to
+stage 6.
