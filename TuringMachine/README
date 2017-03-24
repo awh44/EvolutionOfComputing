@@ -62,8 +62,7 @@ specifies a move of the head left but the head is already at the left end of the
 will not move, i.e., the tape is only infinitely long in one direction. Also, note that blank
 lines are ignored and comments can be made by beginning a line with '#'.
 
-Finally, the second argument to the program is the name of the file containing the input tape.
-This should be a single line of ASCII characters.
+Finally, the input tape for the Turing machine is provided as a single line in standard input.
 
 Also provided with this program are two example specifications, in the input/ directory. The
 first is lenpow2.txt. This is a translation of Figure 3.8 of Michael Sipser's textbook into a
