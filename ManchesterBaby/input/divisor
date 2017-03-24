@@ -1,0 +1,55 @@
+# -24 to accumulator
+l 0 0b0100000000011000
+# accumulator to 26
+l 1 0b0110000000011010
+# -26 to accumulator
+l 2 0b0100000000011010
+# accumulator to 27
+l 3 0b0110000000011011
+
+# -23 to accumulator
+l 4 0b0100000000010111
+
+# subtract 27
+l 5 0b1000000000011011
+# Test
+l 6 0b1100000000000000
+# Add 20 to current instruction pointer
+l 7 0b0010000000010100
+
+# subtract 26
+l 8 0b1000000000011010
+# accumulator to 25
+l 9 0b0110000000011001
+# -25 to accumulator
+l 10 0b0100000000011001
+# Test
+l 11 0b1100000000000000
+
+# Stop
+l 12 0b1110000000000000
+
+# -26 to accumulator
+l 13 0b0100000000011010
+# subtract 21
+l 14 0b1000000000010101
+# accumulator to 27
+l 15 0b0110000000011011
+# -27 to accumulator
+l 16 0b0100000000011011
+# accumulator to 26
+l 17 0b0110000000011010
+# 22 to current instruction pointer
+l 18 0b0000000000010110
+
+# -3 needed for relative jump
+l 20 -3
+l 21 1
+l 22 4
+# Negative of value to test
+l 23 -262144
+# First divisor to test
+l 24 262143
+
+e
+d

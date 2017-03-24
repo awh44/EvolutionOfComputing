@@ -1,0 +1,28 @@
+# Load 1 into address 0
+l 0 1
+# Load 2 into address 1
+l 1 2
+
+# Load from address 0
+l 4 0b100000000000000
+# Subtract contents of address 1
+l 5 0b1000000000000001
+# Store to address 2
+l 6 0b110000000000010
+# Load from address 2
+l 7 0b100000000000010
+# Store to address 2
+l 8 0b110000000000010
+l 9 0b1110000000000000
+
+# Set the current instruction to "load from 0"
+c 4
+
+# Display the initial configuration
+d
+
+# Execute until a halt instruction is encountered
+e
+
+# Display the final configuration
+d

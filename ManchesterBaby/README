@@ -1,0 +1,68 @@
+Austin Herring
+CS T680: Evolution of Computing
+Manchester Baby Simulator
+February 14, 2017
+
+The provided files comprise a program to simulate the "Manchester Baby," usually recognized
+as the first stored-program computer to successfully execute. Run as an interactive command
+line program, it allows the user to load values into memory, set the instruction pointer,
+execute instructions, and inspect the machine's values.
+
+The Manchester Baby has 32 memory locations, an accumulator register, a current instruction
+pointer register, and a present instruction register, and allows for 7 different instructions
+to be executed. More information on the instruction format can be found on the Wikipedia page:
+	https://en.wikipedia.org/wiki/Manchester_Small-Scale_Experimental_Machine
+or on historical sites:
+	http://curation.cs.manchester.ac.uk/computer50/www.computer50.org/mark1/new.baby.html#specification
+	http://curation.cs.manchester.ac.uk/computer50/www.computer50.org/mark1/firstprog.html
+Using the currently discussed program is simply a matter of loading the correct instructions
+following these formats into memory, supplying appropriate data values in memory, setting the
+current instruction pointer to the beginning of the Baby's program, and telling it to start
+executing. Instructions on how to do so are given below.
+
+On a Unix machine, simply executing "make" should compile the program into "baby" in the current
+directory. (Note that the makefile does expect gcc and the "gnu11" standard, though this shouldn't
+be terribly hard to change.)
+
+Running the program brings up a prompt at which several directives can be entered. They are as
+follows:
+	l [address] [value]
+		Loads the given value into the given address. Address must be less than 32, and value
+		should fit in a 32-bit signed integer. Either address or value may be in decimal,
+		hexadecimal (if prefixed with '0x'), or binary (if prefixed with '0b'). 
+
+	c [address]
+		Loads the given address into the current instruction register. Address must be less than
+		32 and may be in decimal, hexadecimal, or binary.
+
+	e [optional: number of steps]
+		Executes instructions for the given number of steps. If no number of steps is provided,
+		it continues executing instructions until a "stop" instruction (opcode 000) is executed.
+		If the baby starts executing an infinite loop, the program will need to be killed with SIGINT.
+		Also note that the number of steps must be in decimal.
+
+	d
+		Display the contents of the machine's registers and memory.
+
+Note that all hexadecimal and binary numbers are not intepreted in 2's complement. Also note that
+directives should not contain either trailing or leading whitespace. Finally, note that any blank
+lines and any lines prefixed with '#' will be ignored.
+
+The program can be run with a single argument, the name of a file containing a list of directives,
+as described above. If an error is encountered while parsing the file, parsing stops immediately,
+and the program drops into the command prompt for inspection.
+
+Also provided, in the input/ directory, are two such lists of directives to load two programs. The
+first of these, add, is a simple program that takes the values in memory locations 0 and 1, produces
+their sum, stores the result in memory location 2, and stops.
+
+The second program, divisor, is more interesting. It is in fact the first program written for 
+he Baby (and, for that matter, a stored program computer in general!). It's been directly
+transcribed from the written specification here:
+	http://curation.cs.manchester.ac.uk/computer50/www.computer50.org/mark1/firstprog.html
+Configured appropriately, the program will calculate the largest divisor of a given number. To be
+more specific, the number of which to find the largest divisor needs to be loaded into memory
+location 23, and the first number to be tested as the divisor (i.e., memory location 23 minus 1)
+needs to be loaded into location 24. Then, after the program has finished running, the largest
+divisor is stored in location 27. The file is currently set up to test 2^18, and it correctly
+stops with the value 131072 in location 27.
