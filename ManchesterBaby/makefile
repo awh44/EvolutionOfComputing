@@ -3,9 +3,7 @@ BLD=bld
 SRC=src
 INC=inc
 IN=input
-OUT=output
 
-DEBUG=-g
 COMMON_FLAGS=-I$(INC) -std=gnu11 -Wall -o $@ $(DEBUG) $(MORE)
 OBJ_FLAGS=$(COMMON_FLAGS) -c $^
 PROG_FLAGS=$(COMMON_FLAGS) $^
