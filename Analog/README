@@ -7,7 +7,8 @@ The provided file projectile represents the configuration of an analog comupter
 to simulate firing a projectile through the air, including air resistance. The
 following describes the entire secnario and the process of arriving at the
 final simulation. To simply learn how to modify and use the simulation, see
-beginning at line 67.
+beginning at line 67. The simulator used is provided and documented here:
+	https://www.cs.drexel.edu/~bls96/analog/index.html
 
 To describe the model in more detail, the simulator implements a representation
 of the scenario described in Figure 1 in the provided figures.pdf.
