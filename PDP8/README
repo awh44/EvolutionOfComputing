@@ -1,0 +1,37 @@
+Austin Herring
+CS T680: Evolution of Computing
+PDP-8 Assembly Program
+March 26, 2017
+
+The provided file pdp8.ini is a script for the SIMH PDP-8 simulator. It loads all
+of the appropriate machine code and program data values into memory to run a
+program that will take user input to calculate the given triangular number by doing
+summing (and not by using the closed-form).
+
+After compiling the SIMH pdp8 program, simply placing pdp8.ini in the directory an
+running pdp8 will run the script and start executing the triangular number program
+It will output a prompt:
+	ENTER 2 DIGITS
+at which point the user can enter two decimal digits using the keyboard. Note that
+even if the number is less than ten, it must still be entered as '0d'. Also note
+that no error checking will be done, so if non-digit characters are input,
+erroneous results may be reported. Finally, note that the program will not echo
+the typed characters.
+
+The program will then compute that triangular number and output it (in decimal),
+including leading 0s if it has less than 4 significant digits. Note that because
+of the 12-bit word size of the PDP-8, only the triangular numbers up to 90 will be
+calculated correctly; the 90th triangular number is 4095, so anything above that
+will overflow back to 0. For these results to be accurate, 4096 must be added to
+the final output value.
+
+If unfamiliar with the SIMH simulator or its scripting language, the main purpose
+of the script is to deposit the correct values in the correct memory locations;
+each "d" command in the script does this. The first argument is the memory
+location, in octal, and the second argument is the value, in octal. This means
+that the machine code for the program can be read by simply scanning down the
+d commands, determining which instruction is located in which location. The file
+has been organized to facilitate such reading, with each d command storing a value
+in a successive memory location, starting with memory location 0200, the beginning
+of the program. The program also has some static data values, which are stored with
+d commands under the "PROGRAM DATA" header.
