@@ -1,0 +1,64 @@
+Austin Herring
+CS T680: Evolution of Computing
+ENIAC Difference Engine
+January 24, 2017
+
+The provided files describe a design of an ENIAC configuration that computes a function
+y = f(x) of a third degree polynomial using the method of differences, similar to how
+Charles Babbage's difference engine would have worked. The ENIAC simulator used is
+located and documented here:
+	https://www.cs.drexel.edu/~bls96/eniac/eniac.html
+
+To do this, the ENIAC is configured akin to the following algorithm:
+	Initialize the first row of the difference table - y, y1, y2, and y3
+	For the desired number of y values:
+		Set y = y + y1
+		Set y1 = y1 + y2
+		Set y2 = y2 + y3
+		Punch y onto an output card
+Note that this will only punch the ys *after* the first y, as the first y is already
+known.
+
+Initializing the system is done with the constant unit. The two available constants
+are divided into 5 digits apiece, with the low digits of j being y, the high digits
+of j being y1, the low digits of k being 2, and the high digits of k being y3
+These are loaded into accumulators 16 through 19, with each of them corresponding to y,
+y1, y2, and y3 consistently throughout the computation. After initialization, the
+master programmer is consulted for a loop pre-test, and then the accumulators execute
+in a "chain reaction" where each accumulator has added to itself the next before
+triggerng the same to happen in the next accumulator, before accumulator 19 triggers the
+punch card to output y/accumulator 16. The initializaing unit triggers the master
+programmer again after punching is complete to restart the loop.
+
+A full diagram of this has been provided in differences.pdf. Note that the presentations
+of the constant transmitter and the shift adapter are slightly simplified. The constant
+transmitter displays only the used pieces, with, from the left, 26i and 26o through 29i
+and 29o. The shift adapter doesn't explicitly show the shift amounts or the
+inputs/outputs, but it has only one input and output and shifts right by 5.
+
+Finally, the specification for the ENIAC simulator has been provided in the file
+differences.e. The file contains comments that explain how each line of the
+configuration applies to the process described above, in more detail. The configurable
+parameters are the number of y values to calculate, by changing the values in the
+master programmer, p.d14s1 through p.d17s1; and the values in the j and k constants
+in the constant transmitter, determining the first row of the difference table, as
+described above and as commented in the specification file.
+
+As it currently stands, the specification is set up to calculate values for the
+following polynomial:
+	y = x^3 + 3x^2 + 2x + 45
+This produces the following initial difference table:
+	x	y	y1	y2	y3
+	0	45	6	12	6
+	1	51	18	18
+	2	69	36
+	3	105
+Thus meaning that the first row is the values 45, 6, 12, and 6. Hence, for 45,
+c.j2 is set to 4 and c.j1 to 5; for 6, c.j6 is set to 6; for 12, c.k2 is set to 1
+and c.k1 to 2; and, for 6, k.k6 is set to 6. Any of these values can be changed to
+get the values for a different third degree polynomial, provided that each number in
+the first row is less than five digits.
+
+The specification is set to print ten y values, for x = 1 through 10, so, out of
+p.d14s1 through p.d17s1, only p.d15s1 is set to 1. Any of these values can be changed
+to print more or less y values.
